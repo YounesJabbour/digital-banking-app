@@ -1,0 +1,43 @@
+<div class="container mt-5">
+    <div class="card shadow-sm rounded col-md-6 offset-md-3">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add New Customer</h4>
+        </div>
+        <div class="card-body">
+            <div *ngIf="newCustomerSuccessMessage || errorMessage" class="alert"
+                [ngClass]="{'alert-success': newCustomerSuccessMessage, 'alert-danger': errorMessage}">
+                <div>{{ newCustomerSuccessMessage || errorMessage }}</div>
+            </div>
+
+            <div *ngIf="newCustomerFormGroup">
+                <form [formGroup]="newCustomerFormGroup" (ngSubmit)="handleNewCustomerSubmit()">
+                    <div class="form-group mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" formControlName="name"
+                            placeholder="Enter customer name">
+                        <span *ngIf="newCustomerFormGroup.controls['name'].touched 
+                            && newCustomerFormGroup.controls['name'].errors 
+                            && newCustomerFormGroup.controls['name'].errors?.['required']" class="text-danger">
+                            Name is required
+                        </span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" formControlName="email"
+                            placeholder="Enter customer email">
+                        <span *ngIf="newCustomerFormGroup.controls['email'].touched 
+                            && newCustomerFormGroup.controls['email'].errors 
+                            && newCustomerFormGroup.controls['email'].errors?.['required']" class="text-danger">
+                            Email is not valid
+                        </span>
+                    </div>
+                    <div class="d-grid">
+                        <button [disabled]="!newCustomerFormGroup.valid" type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
