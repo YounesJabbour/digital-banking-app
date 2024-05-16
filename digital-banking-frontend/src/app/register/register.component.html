@@ -1,0 +1,50 @@
+<div class="container mt-5">
+    <div class="card shadow-sm rounded col-md-6 offset-md-3">
+        <div class="card-header bg-primary text-white text-center p-4">
+            <h4 class="mb-0">Register</h4>
+        </div>
+        <div class="card-body">
+            <div *ngIf="registerCustomerSuccessMessage || errorMessage" class="alert"
+                [ngClass]="{'alert-success': registerCustomerSuccessMessage, 'alert-danger': errorMessage}">
+                <div>{{ registerCustomerSuccessMessage || errorMessage }}</div>
+            </div>
+
+            <form [formGroup]="registerCustomerFormGroup" (ngSubmit)="handleRegisterCustomerSubmit()">
+                <div class="form-group mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" formControlName="name" placeholder="Enter name">
+                    <span *ngIf="registerCustomerFormGroup.controls['name'].touched 
+                        && registerCustomerFormGroup.controls['name'].errors 
+                        && registerCustomerFormGroup.controls['name'].errors?.['required']" class="text-danger">
+                        Name is required
+                    </span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" formControlName="email"
+                        placeholder="Enter email">
+                    <span *ngIf="registerCustomerFormGroup.controls['email'].touched 
+                        && registerCustomerFormGroup.controls['email'].errors 
+                        && registerCustomerFormGroup.controls['email'].errors?.['required']" class="text-danger">
+                        Valid email is required
+                    </span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" formControlName="password"
+                        placeholder="Enter password">
+                    <span *ngIf="registerCustomerFormGroup.controls['password'].touched 
+                        && registerCustomerFormGroup.controls['password'].errors 
+                        && registerCustomerFormGroup.controls['password'].errors?.['minlength']" class="text-danger">
+                        Password should have at least 8 characters
+                    </span>
+                </div>
+                <div class="d-grid">
+                    <button [disabled]="!registerCustomerFormGroup.valid" type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

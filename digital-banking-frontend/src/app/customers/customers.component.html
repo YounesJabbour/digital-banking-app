@@ -25,7 +25,9 @@
                             <th>Customer ID</th>
                             <th>Name</th>
                             <th>Email</th>
+                            @if(authService.roles.includes('ADMIN')) {
                             <th class="text-end">Actions</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +37,7 @@
                             <td>{{ customer.email }}</td>
                             <td class="text-end">
                                 <!-- Uncomment the button below if you want to enable edit functionality -->
+                                @if(authService.roles.includes('ADMIN')) {
                                 <button class="btn btn-info me-2" (click)="handleEditCustomer(customer)">
                                     <i class="bi bi-pencil"></i>
                                 </button>
@@ -42,6 +45,9 @@
                                 <button class="btn btn-danger" (click)="handleDeleteCustomer(customer)">
                                     <i class="bi bi-trash"></i>
                                 </button>
+                                }
+
+
                             </td>
                         </tr>
                     </tbody>

@@ -28,7 +28,7 @@ public class DaoTest {
         SpringApplication.run(AppApplication.class, args);
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner start(BankAccountService bankAccountService, BankAccountRepository bankAccountRepository, CustomerRepository customerRepository) {
         return args -> {
             Stream.of("Hassan", "Mohamed", "Ali", "Omar", "abdlillah").forEach(name -> {
@@ -60,7 +60,7 @@ public class DaoTest {
         };
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner commandLineRunner(CustomerRepository customerRepository,
                             AccountOperationRepository accountOperationRepository,
                             BankAccountRepository bankAccountRepository){

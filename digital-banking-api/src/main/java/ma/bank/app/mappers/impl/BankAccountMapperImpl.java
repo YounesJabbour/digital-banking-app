@@ -1,9 +1,6 @@
-package ma.bank.app.mappers;
+package ma.bank.app.mappers.impl;
 
-import ma.bank.app.Dtos.AccountOperationDTO;
-import ma.bank.app.Dtos.CurrentBankAccountDTO;
-import ma.bank.app.Dtos.CustomerDTO;
-import ma.bank.app.Dtos.SavingBankAccountDTO;
+import ma.bank.app.Dtos.*;
 import ma.bank.app.entity.AccountOperation;
 import ma.bank.app.entity.CurrentAccount;
 import ma.bank.app.entity.Customer;
@@ -60,5 +57,8 @@ public class BankAccountMapperImpl {
         BeanUtils.copyProperties(accountOperation, accountOperationDTO);
         return accountOperationDTO;
     }
+
+
+
 
 }

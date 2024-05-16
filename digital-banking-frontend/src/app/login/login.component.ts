@@ -19,16 +19,17 @@ export class LoginComponent {
 
   ngOnInit() {
     this.formLogin = this.fb.group({
-      username: this.fb.control(''),
+      email: this.fb.control(''),
       password: this.fb.control(''),
     });
   }
 
   handleLogin() {
-    let username = this.formLogin.get('username')?.value;
-    let password = this.formLogin.get('password')?.value;
+    // let email = this.formLogin.get('username')?.value;
+    // let password = this.formLogin.get('password')?.value;
 
-    this.authService.login(username, password).subscribe({
+    const newCustomer = this.formLogin.value;
+    this.authService.login(newCustomer).subscribe({
       next: (data) => {
         this.authService.loadProfile(data);
         console.log('Login successful');
@@ -38,5 +39,13 @@ export class LoginComponent {
         console.log(error);
       },
     });
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
+  }
+
+  navigateToChangePassword() {
+    this.router.navigate(['/change-password']);
   }
 }

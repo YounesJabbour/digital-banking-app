@@ -17,23 +17,33 @@ export class AuthService {
 
   isAuthenticated: boolean = false;
   username: any;
+  name: any;
   roles: any;
   accessToken: string = '';
 
-  public login(username: string, password: string) {
-    let options = new HttpHeaders().set(
-      'Content-Type',
-      'application/x-www-form-urlencoded'
-    );
+  public login(customer: any) {
+    let options = new HttpHeaders().set('Content-Type', 'application/json');
 
-    let params = new HttpParams()
-      .set('username', username)
-      .set('password', password);
+    // let params = new HttpParams()
+    //   .set('username', username)
+    //   .set('password', password);
 
     return this.http.post<AuthResponse>(
       `${environment.baseUrl}/auth/login`,
-      params,
+      customer,
       { headers: options }
+    );
+  }
+
+  public register(customer: any) {
+    let options = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post<any>(
+      `${environment.baseUrl}/auth/register`,
+      customer,
+      {
+        headers: options,
+      }
     );
   }
 
@@ -45,6 +55,7 @@ export class AuthService {
 
     this.username = decodedJwt.sub;
     this.roles = decodedJwt.scope;
+    this.name = decodedJwt.name;
 
     // set the access token in local storage
     localStorage.setItem('jwt-token', this.accessToken);
@@ -65,5 +76,21 @@ export class AuthService {
       this.loadProfile({ 'access-token': jwt });
       this.router.navigateByUrl('/admin/customers');
     }
+  }
+
+  changePassword(email: string, currentPassword: string, newPassword: string) {
+    let options = new HttpHeaders().set('Content-Type', 'application/json');
+    let passwordChange = {
+      email: email,
+      oldPassword: currentPassword,
+      newPassword: newPassword,
+    };
+    return this.http.put<any>(
+      `${environment.baseUrl}/auth/changePassword`,
+      passwordChange,
+      {
+        headers: options,
+      }
+    );
   }
 }

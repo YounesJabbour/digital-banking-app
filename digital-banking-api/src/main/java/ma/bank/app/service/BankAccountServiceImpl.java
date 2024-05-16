@@ -10,12 +10,13 @@ import ma.bank.app.entity.*;
 import ma.bank.app.exception.BalanceNotSufficientException;
 import ma.bank.app.exception.BankAccountNotFoundException;
 import ma.bank.app.exception.CustomerNotFoundException;
-import ma.bank.app.mappers.BankAccountMapperImpl;
+import ma.bank.app.mappers.impl.BankAccountMapperImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
@@ -193,24 +194,33 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public Map<String, String> login(String username, String password) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    public Map<String, String> login(String email, String password) {
 
-        Instant instant = Instant.now();
-        String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
-        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                .expiresAt(instant.plus(20, ChronoUnit.MINUTES))
-                .subject(username)
-                .claim("scope", scope)
-                .build();
-        JwtEncoderParameters jwtEncoderParameters =
-                JwtEncoderParameters.from(
-                        JwsHeader.with(MacAlgorithm.HS512).build(),
-                        jwtClaimsSet
-                );
-        String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
-        return Map.of("access-token", jwt);
+            Customer customer = (Customer) authentication.getPrincipal();
+            Instant instant = Instant.now();
+//        String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+
+            JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                    .expiresAt(instant.plus(20, ChronoUnit.MINUTES))
+                    .subject(customer.getEmail())
+                    .claim("scope", customer.getRole().name())
+                    .claim("name", customer.getName())
+                    .build();
+            JwtEncoderParameters jwtEncoderParameters =
+                    JwtEncoderParameters.from(
+                            JwsHeader.with(MacAlgorithm.HS512).build(),
+                            jwtClaimsSet
+                    );
+            String jwt = jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+            return Map.of("access-token", jwt);
+        } catch (AuthenticationException e) {
+            System.out.println("Authentication failed: " + e.getMessage());
+            return Map.of("error", "Authentication failed");
+        }
+
     }
 }

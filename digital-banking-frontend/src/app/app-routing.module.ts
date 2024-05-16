@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomersComponent } from './customers/customers.component';
 import { AccountsComponent } from './accounts/accounts.component';
@@ -8,9 +8,17 @@ import { AdminTemplateComponent } from './admin-template/admin-template.componen
 import { authorizationGuard } from './guards/authorization.guard';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { EditCustomerComponent } from './edit-customer/edit-customer.component';
+import { RegisterComponent } from './register/register.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    // children: [],
+  },
+  { path: 'change-password', component: ChangePasswordComponent },
+  { path: 'register', component: RegisterComponent },
   {
     path: 'admin',
     component: AdminTemplateComponent,

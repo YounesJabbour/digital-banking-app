@@ -3,6 +3,7 @@ import { CustomerService } from '../services/customer.service';
 import { Customer } from '../models/customer.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-customers',
@@ -23,7 +24,8 @@ export class CustomersComponent {
   constructor(
     private customerService: CustomerService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {

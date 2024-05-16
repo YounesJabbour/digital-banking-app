@@ -3,12 +3,15 @@ package ma.bank.app.security;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import ma.bank.app.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -49,29 +52,30 @@ public class SecurityConfig {
         return httpSecurity.sessionManagement(sn -> sn.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers(apiVersion + "/auth/**",
-                                "/customers/**",
-                                apiVersion + "/bankAccounts/**",
-                                "/v2/api-docs",
-                                "/swagger-resources",
-                                "/swagger-resources/**",
-                                "/configuration/ui",
-                                "/configuration/security",
-                                "/swagger-ui.html",
-                                "/webjars/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**")
-                        .permitAll()).authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+//                .authorizeHttpRequests(auth -> auth.requestMatchers(apiVersion + "/auth/login",
+//                                apiVersion + "/auth/register",
+//                                "/customers/**",
+//                                apiVersion + "/bankAccounts/**",
+//                                "/v2/api-docs",
+//                                "/swagger-resources",
+//                                "/swagger-resources/**",
+//                                "/configuration/ui",
+//                                "/configuration/security",
+//                                "/swagger-ui.html",
+//                                "/webjars/**",
+//                                "/v3/api-docs/**",
+//                                "/swagger-ui/**")
+//                        .permitAll()).authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())).build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManagerConfigurer() {
-        PasswordEncoder passwordEncoder = passwordEncoder();
-        return new InMemoryUserDetailsManager(User.withUsername("user1").password(passwordEncoder.encode("password"))
-                .authorities("USER").build(), User.withUsername("admin").password(passwordEncoder.encode("password"))
-                .authorities("ADMIN", "USER").build());
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager inMemoryUserDetailsManagerConfigurer() {
+//        PasswordEncoder passwordEncoder = passwordEncoder();
+//        return new InMemoryUserDetailsManager(User.withUsername("user1").password(passwordEncoder.encode("password"))
+//                .authorities("USER").build(), User.withUsername("admin").password(passwordEncoder.encode("password"))
+//                .authorities("ADMIN", "USER").build());
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -90,14 +94,26 @@ public class SecurityConfig {
         return NimbusJwtDecoder.withSecretKey(secretKeySpec).macAlgorithm(MacAlgorithm.HS512).build();
     }
 
+//    @Bean
+//    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+//        daoAuthenticationProvider.setUserDetailsService(inMemoryUserDetailsManagerConfigurer());
+//        return new ProviderManager(daoAuthenticationProvider);
+//    }
+
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(inMemoryUserDetailsManagerConfigurer());
-        return new ProviderManager(daoAuthenticationProvider);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider(UserService userService) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userService);
+        return provider;
+    }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
