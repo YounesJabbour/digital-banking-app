@@ -8,7 +8,7 @@
 ![alt text](https://github.com/YounesJabbour/digital-banking-app/blob/main/imgs/bankaccount.png?raw=true)
 ![alt text](https://github.com/YounesJabbour/digital-banking-app/blob/main/imgs/search.png?raw=true)
 
-![alt text](https://github.com/YounesJabbour/digital-banking-app/blob/main/imgs/afterOperation.png?raw=true)
+![alt text](https://github.com/YounesJabbour/digital-banking-app/blob/main/imgs/debit.png?raw=true)
 
 ![alt text](https://github.com/YounesJabbour/digital-banking-app/blob/main/imgs/transfere.png?raw=true)
 ![alt text](https://github.com/YounesJabbour/digital-banking-app/blob/main/imgs/credit.png?raw=true)
