@@ -7,6 +7,7 @@ import ma.bank.app.Repository.AccountOperationRepository;
 import ma.bank.app.Repository.BankAccountRepository;
 import ma.bank.app.Repository.CustomerRepository;
 import ma.bank.app.entity.*;
+import ma.bank.app.enums.OperationType;
 import ma.bank.app.exception.BalanceNotSufficientException;
 import ma.bank.app.exception.BankAccountNotFoundException;
 import ma.bank.app.exception.CustomerNotFoundException;
@@ -109,6 +110,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         accountOperation.setAmount(debitDTO.getAmount());
         accountOperation.setDescription(debitDTO.getDescription());
         accountOperation.setBankAccount(bankAccount);
+        accountOperation.setOperationType(OperationType.DEBIT);
 
         bankAccount.setBalance(bankAccount.getBalance() - debitDTO.getAmount());
         this.bankAccountRepository.save(bankAccount);
@@ -124,6 +126,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         accountOperation.setBankAccount(bankAccount);
         bankAccount.setBalance(bankAccount.getBalance() + creditDTO.getAmount());
         this.bankAccountRepository.save(bankAccount);
+        accountOperation.setOperationType(OperationType.CREDIT);
         this.accountOperationRepository.save(accountOperation);
     }
 

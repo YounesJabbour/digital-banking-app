@@ -28,10 +28,10 @@ public class DaoTest {
         SpringApplication.run(AppApplication.class, args);
     }
 
-    //@Bean
+    @Bean
     CommandLineRunner start(BankAccountService bankAccountService, BankAccountRepository bankAccountRepository, CustomerRepository customerRepository) {
         return args -> {
-            Stream.of("Hassan", "Mohamed", "Ali", "Omar", "abdlillah").forEach(name -> {
+            Stream.of("John", "Jane", "Bob", "Alice", "Charlie").forEach(name -> {
                 CustomerDTO customer = CustomerDTO.builder().name(name).email(name + "@gmail.com").build();
                 bankAccountService.saveCustomer(customer);
             });
@@ -60,15 +60,15 @@ public class DaoTest {
         };
     }
 
-    //@Bean
+    @Bean
     CommandLineRunner commandLineRunner(CustomerRepository customerRepository,
                             AccountOperationRepository accountOperationRepository,
                             BankAccountRepository bankAccountRepository){
         return args -> {
-            Stream.of("hamid","taha","mohammed").forEach(name->{
+            Stream.of("Sam", "Alex", "Taylor").forEach(name -> {
                 Customer customer = new Customer();
                 customer.setName(name);
-                customer.setEmail(name+"@email.com");
+                customer.setEmail(name + "@email.com");
                 customerRepository.save(customer);
             });
             customerRepository.findAll().forEach(customer -> {
